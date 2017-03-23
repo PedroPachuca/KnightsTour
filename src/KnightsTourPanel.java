@@ -4,10 +4,10 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -76,6 +76,46 @@ public class KnightsTourPanel extends JPanel {
                 } else {
                     b.setBackground(Color.BLACK);
                 }
+                b.addMouseListener(new MouseListener() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseExited(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mousePressed(MouseEvent e) {
+						//if(firstClick) {
+						Rectangle point = new Rectangle(b.getX(), b.getY(), 0, 0);
+						System.out.println("clciked");
+						start = new Vector(b.getX() / 90, b.getY());
+						System.out.println("Button X : " + start.x + " Y: " + start.y);
+						System.out.println("Event X : " + e.getX() + " Y: " + e.getY());
+						firstClick = false;
+						//}
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						// TODO Auto-generated method stub
+						
+					}
+                	
+                	});
                 chessBoardSquares[jj][ii] = b;
             }
         }
@@ -108,42 +148,6 @@ public class KnightsTourPanel extends JPanel {
 	// first click, and then after the first click, there should
 	// be no more mouse listening!
 	private void addMouseListener() {
-		if(firstClick) {
-		MouseListener mouseListener = new MouseListener() {
-			
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				start = new Vector(arg0.getX(), arg0.getY());
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				start = new Vector(e.getX(), e.getY());
-				firstClick = false;
-				// TODO Auto-generated method stub
-				
-			}
-		};
-		this.addMouseListener(mouseListener);
-		}
 	}
 
 
