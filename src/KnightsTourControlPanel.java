@@ -3,6 +3,7 @@ import java.awt.*;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 /* One of the tricky things you have to figure out is how to have
  * the controls in the control panel talk to the KnightsTourPanel.
@@ -32,7 +33,16 @@ public class KnightsTourControlPanel extends JPanel {
 		this.add(new JButton("Run"));
 		
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, SPEED_MIN, SPEED_MAX, SPEED_INIT);
-		//speedSlider.addChangeListener(myChangeListener);
+		ChangeListener CL = new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				System.out.println(arg0.toString());
+				
+			}
+			
+		};
+		speedSlider.addChangeListener(CL);
 
 		//Turn on labels at major tick marks.
 		speedSlider.setMajorTickSpacing(10);
