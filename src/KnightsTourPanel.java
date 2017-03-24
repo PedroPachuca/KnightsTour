@@ -15,7 +15,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
 /*
@@ -33,7 +32,6 @@ public class KnightsTourPanel extends JPanel {
 	private Image knight;
 	private Vector start;
 	private Vector loc;
-	private int[][] grid;
 	private Tiles[][] tiles;
 	private JButton[][] chessBoardSquares = new JButton[8][8];
 	private static final String COLS = "ABCDEFGH";
@@ -45,7 +43,6 @@ public class KnightsTourPanel extends JPanel {
 		this.setLayout(new GridLayout(0, 9));
 		this.setPreferredSize(new Dimension(w,h));
 		this.setBackground(Color.green);
-		grid = new int[w][h];
 		tiles = new Tiles[8][8];
 		setKnight();
 		populateTiles();
@@ -84,8 +81,6 @@ public class KnightsTourPanel extends JPanel {
             	int currentRow = ii;
             	int currentCol = jj;
                 JButton b = new JButton();
-                // our chess pieces are 64x64 px in size, so we'll
-                // 'fill this in' using a transparent icon..
                 if ((jj % 2 == 1 && ii % 2 == 1)|| (jj % 2 == 0 && ii % 2 == 0)) {
                     b.setBackground(Color.WHITE);
                 } else {
@@ -106,8 +101,6 @@ public class KnightsTourPanel extends JPanel {
 						b.setIcon(icon);
 						firstClick = false;
 						}
-						// TODO Auto-generated method stub
-						
 					}
 					@Override
 					public void mouseReleased(MouseEvent e) {}
@@ -121,13 +114,11 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private void fillBoard() {
 		 this.add(new JLabel(""));
-	        // fill the top row
 	        for (int ii = 0; ii < 8; ii++) {
 	            this.add(
 	                    new JLabel(COLS.substring(ii, ii + 1),
 	                    SwingConstants.CENTER));
 	        }
-	        // fill the black non-pawn piece row
 	        for (int ii = 0; ii < 8; ii++) {
 	            for (int jj = 0; jj < 8; jj++) {
 	                switch (jj) {
@@ -187,6 +178,7 @@ public class KnightsTourPanel extends JPanel {
 		loc = best.getRC();
 	}
 	private Tiles[] findPossibleMoves(Vector loc) {
+		//TODO find all possible moves
 		return null;
 	}
 	

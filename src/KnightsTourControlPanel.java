@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -29,22 +31,91 @@ public class KnightsTourControlPanel extends JPanel {
 	private void setUpButtonsAndSliders() {
 		FlowLayout experimentLayout = new FlowLayout();
 		this.setLayout(experimentLayout);
-		this.add(new JButton("Move"));
-		this.add(new JButton("Run"));
+		JButton moveButton = new JButton("Move");
+		moveButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				System.out.println("MOVE KNIGHT");
+				//TODO find way to move knight in panel
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});;
+		JButton runButton = new JButton("Run");
+		runButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				System.out.println("RUN KNIGHT");
+				//TODO find way to continually move knight in panel
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});;
+		this.add(moveButton);
+		this.add(runButton);
 		
 		JSlider speedSlider = new JSlider(JSlider.HORIZONTAL, SPEED_MIN, SPEED_MAX, SPEED_INIT);
 		ChangeListener CL = new ChangeListener() {
 
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
-				System.out.println(arg0.toString());
-				
+				System.out.println("CHANGE SPEED to " + speedSlider.getValue());
+				//TODO change speed to slider val
 			}
 			
 		};
+		
 		speedSlider.addChangeListener(CL);
-
-		//Turn on labels at major tick marks.
 		speedSlider.setMajorTickSpacing(10);
 		speedSlider.setMinorTickSpacing(1);
 		speedSlider.setPaintTicks(true);
