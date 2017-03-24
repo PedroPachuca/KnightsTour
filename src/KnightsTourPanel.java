@@ -34,8 +34,10 @@ public class KnightsTourPanel extends JPanel {
 	private Vector start;
 	private Vector loc;
 	private int[][] grid;
+	private Tiles[][] tiles;
 	private JButton[][] chessBoardSquares = new JButton[8][8];
 	private static final String COLS = "ABCDEFGH";
+	private ImageIcon icon;
 	
 	
 
@@ -44,9 +46,23 @@ public class KnightsTourPanel extends JPanel {
 		this.setPreferredSize(new Dimension(w,h));
 		this.setBackground(Color.green);
 		grid = new int[w][h];
-		addMouseListener();
+		tiles = new Tiles[8][8];
 		setKnight();
+		populateTiles();
 		makeBoard();
+		makeIcon();
+	}
+	private void makeIcon() {
+		icon = new ImageIcon();
+		icon.setImage(getKnight());
+	}
+	private void populateTiles() {
+		for(int x = 0; x < tiles.length; x++) {
+			for(int y = 0; y < tiles[x].length; y++) {
+				tiles[x][y] = new Tiles(x, y);
+			}
+		
+		}
 	}
 	private void setKnight() {
 		try {
@@ -65,12 +81,11 @@ public class KnightsTourPanel extends JPanel {
 		this.setBorder(new LineBorder(Color.black));
 		for (int ii = 0; ii < chessBoardSquares.length; ii++) {
             for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
+            	int currentRow = ii;
+            	int currentCol = jj;
                 JButton b = new JButton();
                 // our chess pieces are 64x64 px in size, so we'll
                 // 'fill this in' using a transparent icon..
-                ImageIcon icon = new ImageIcon();
-                icon.setImage(getKnight());
-                b.setIcon(icon);
                 if ((jj % 2 == 1 && ii % 2 == 1)|| (jj % 2 == 0 && ii % 2 == 0)) {
                     b.setBackground(Color.WHITE);
                 } else {
@@ -78,42 +93,24 @@ public class KnightsTourPanel extends JPanel {
                 }
                 b.addMouseListener(new MouseListener() {
 					@Override
-					public void mouseClicked(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
+					public void mouseClicked(MouseEvent e) {}
 					@Override
-					public void mouseEntered(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
+					public void mouseEntered(MouseEvent e) {}
 					@Override
-					public void mouseExited(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
-
+					public void mouseExited(MouseEvent e) {}
 					@Override
 					public void mousePressed(MouseEvent e) {
-						//if(firstClick) {
-						Rectangle point = new Rectangle(b.getX(), b.getY(), 0, 0);
-						System.out.println("clciked");
-						start = new Vector(b.getX() / 90, b.getY());
-						System.out.println("Button X : " + start.x + " Y: " + start.y);
-						System.out.println("Event X : " + e.getX() + " Y: " + e.getY());
+						if(firstClick) {
+						start = new Vector(currentRow, currentCol);
+						loc = start;
+						b.setIcon(icon);
 						firstClick = false;
-						//}
+						}
 						// TODO Auto-generated method stub
 						
 					}
-
 					@Override
-					public void mouseReleased(MouseEvent e) {
-						// TODO Auto-generated method stub
-						
-					}
+					public void mouseReleased(MouseEvent e) {}
                 	
                 	});
                 chessBoardSquares[jj][ii] = b;
@@ -144,11 +141,6 @@ public class KnightsTourPanel extends JPanel {
 	        }
 		
 	}
-	// add the mouse listener.  This will only work for the 
-	// first click, and then after the first click, there should
-	// be no more mouse listening!
-	private void addMouseListener() {
-	}
 
 
 	public void paintComponent(Graphics g) {
@@ -162,8 +154,13 @@ public class KnightsTourPanel extends JPanel {
 	 * The knight's location should be updated and the 
 	 */
 	public boolean makeRandomMove() {
-		
-		return false;
+		Tiles[] possibleMoves = findPossibleMoves(loc);
+		if(possibleMoves.length == 0) {
+			return false;
+		}
+		int index = (int) (Math.random() * possibleMoves.length);
+		moveTo(possibleMoves[index]);
+		return true;
 	}
 	/* make a move to a new location that ensures the best chance
 	 * for a complete traversal of the board.
@@ -171,8 +168,26 @@ public class KnightsTourPanel extends JPanel {
 	 * then false is returned.  Otherwise, true is returned.
 	 */
 	public boolean makeThoughtfulMove() {
-
-		return false;
+		Tiles[] possibleMoves = findPossibleMoves(loc);
+		if(possibleMoves.length == 0) {
+			return false;
+		}
+		Tiles best = null;
+		for(Tiles tile: possibleMoves) {
+			if(tile.getMoves() > best.getMoves()) {
+				best = tile;
+			}
+		}
+		moveTo(best);
+		return true;
+	}
+	private void moveTo(Tiles best) {
+		chessBoardSquares[loc.x][loc.y].setIcon(null);
+		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
+		loc = best.getRC();
+	}
+	private Tiles[] findPossibleMoves(Vector loc) {
+		return null;
 	}
 	
 	
