@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -96,11 +97,13 @@ public class KnightsTourPanel extends JPanel {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						if(firstClick) {
-						start = new Vector(currentRow, currentCol);
+						start = new Vector(currentCol, currentRow);
 						loc = start;
+						System.out.println(loc.x + " , "+ loc.y);
 						b.setIcon(icon);
 						firstClick = false;
 						}
+					
 					}
 					@Override
 					public void mouseReleased(MouseEvent e) {}
@@ -175,10 +178,41 @@ public class KnightsTourPanel extends JPanel {
 	private void moveTo(Tiles best) {
 		chessBoardSquares[loc.x][loc.y].setIcon(null);
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
+		best.visited = true;
 		loc = best.getRC();
+		
 	}
 	private Tiles[] findPossibleMoves(Vector loc) {
 		//TODO find all possible moves
+		ArrayList<Tiles> possibles = new ArrayList();
+		if(UL(loc) != null) {
+			possibles.add(UL(loc));
+		}
+		if(UR(loc) != null){
+			possibles.add(UR(loc));
+		}
+		//RU(loc);
+		//LU(loc);
+		//RD(loc);
+		//LD(loc);
+		//DR(loc);
+		//DL(loc);
+		return null;
+	}
+	private Tiles UR(Vector loc) {
+		if(loc.x < tiles.length - 1) {
+			if(loc.y > 1) {
+				return tiles[loc.x + 1][loc.y - 2];
+			}
+		}
+		return null;
+	}
+	private Tiles UL(Vector loc) {
+		if(loc.x > 0) {
+			if(loc.y > 1) {
+				return tiles[loc.x - 1][loc.y - 2];
+			}
+		}
 		return null;
 	}
 	
