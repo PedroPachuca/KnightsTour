@@ -102,6 +102,7 @@ public class KnightsTourPanel extends JPanel {
 						System.out.println(loc.x + " , "+ loc.y);
 						b.setIcon(icon);
 						firstClick = false;
+						updatePossibles();
 						}
 					
 					}
@@ -114,6 +115,13 @@ public class KnightsTourPanel extends JPanel {
         }
 		
 		fillBoard();
+	}
+	private void updatePossibles() {
+		for(int r = 0; r < chessBoardSquares.length; r++) {
+			for(int c = 0; c < chessBoardSquares[r].length; c++) {
+				tiles[r][c].setMoves((findPossibleMoves(tiles[r][c].getRC()).length));
+			}
+		}
 	}
 	private void fillBoard() {
 		 this.add(new JLabel(""));
@@ -148,6 +156,7 @@ public class KnightsTourPanel extends JPanel {
 	 * The knight's location should be updated and the 
 	 */
 	public boolean makeRandomMove() {
+		updatePossibles();
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
 			return false;
@@ -162,6 +171,8 @@ public class KnightsTourPanel extends JPanel {
 	 * then false is returned.  Otherwise, true is returned.
 	 */
 	public boolean makeThoughtfulMove() {
+		updatePossibles();
+		System.out.println(loc);
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
 			return false;
@@ -176,27 +187,91 @@ public class KnightsTourPanel extends JPanel {
 		return true;
 	}
 	private void moveTo(Tiles best) {
+		
 		chessBoardSquares[loc.x][loc.y].setIcon(null);
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
 		best.visited = true;
 		loc = best.getRC();
-		
+		System.out.println(loc);
 	}
 	private Tiles[] findPossibleMoves(Vector loc) {
-		//TODO find all possible moves
-		ArrayList<Tiles> possibles = new ArrayList();
+		ArrayList<Tiles> possibles = new ArrayList<Tiles>();
 		if(UL(loc) != null) {
 			possibles.add(UL(loc));
 		}
 		if(UR(loc) != null){
 			possibles.add(UR(loc));
 		}
-		//RU(loc);
-		//LU(loc);
-		//RD(loc);
-		//LD(loc);
-		//DR(loc);
-		//DL(loc);
+		if(DL(loc) != null) {
+			possibles.add(DL(loc));
+		}
+		if(DR(loc) != null) {
+			possibles.add(DR(loc));
+		}
+		if(LU(loc) != null) {
+			possibles.add(LU(loc));
+		}
+		if(LD(loc) != null) {
+			possibles.add(LD(loc));
+		}
+		if(RD(loc) != null) {
+			possibles.add(RD(loc));
+		}
+		if(RU(loc) != null) {
+			possibles.add(RU(loc));
+		}
+		if(!possibles.isEmpty()) {
+			Tiles[] arr = new Tiles[possibles.size()];
+			return possibles.toArray(arr);
+		}
+		return null;
+	}
+	private Tiles RU(Vector loc) {
+		if(loc.x < tiles.length - 2) {
+			if(loc.y > 0) {
+				return tiles[loc.x + 2][loc.y - 1];
+			}
+		}
+		return null;
+	}
+	private Tiles RD(Vector loc) {
+		if(loc.x < tiles.length - 2) {
+			if(loc.y < tiles.length - 2) {
+				return tiles[loc.x + 2][loc.y + 1];
+			}
+		}
+		return null;
+	}
+	private Tiles LD(Vector loc) {
+		if(loc.x > 2) {
+			if(loc.y < tiles.length - 2) {
+				return tiles[loc.x - 2][loc.x + 1];
+			}
+		}
+		return null;
+	}
+	private Tiles LU(Vector loc) {
+		if(loc.x > 2) {
+			if(loc.y > 0) {
+				return tiles[loc.x - 2][loc.y - 1];
+			}
+		}
+		return null;
+	}
+	private Tiles DR(Vector loc) {
+		if(loc.x < tiles.length - 1) {
+			if(loc.y > tiles.length - 3) {
+				return tiles[loc.x + 1][loc.y + 2];
+			}
+		}
+		return null;
+	}
+	private Tiles DL(Vector loc) {
+		if(loc.x > 0) {
+			if(loc.y > tiles.length - 3) {
+				return tiles[loc.x -1][loc.y + 2];
+			}
+		}
 		return null;
 	}
 	private Tiles UR(Vector loc) {

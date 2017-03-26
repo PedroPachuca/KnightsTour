@@ -13,13 +13,15 @@ import javax.swing.event.ChangeListener;
  */
 
 public class KnightsTourControlPanel extends JPanel {
+	
 	static final int SPEED_MIN = 0;
 	static final int SPEED_MAX = 30;
 	static final int SPEED_INIT = 15;  
-	
-	public KnightsTourControlPanel(int w, int h) {
+	KnightsTourPanel knights;
+	public KnightsTourControlPanel(int w, int h, KnightsTourPanel cur) {
 		this.setPreferredSize(new Dimension(w, h));
 		this.setBackground(Color.orange);
+		knights = cur;
 		setUpButtonsAndSliders();
 	}
 
@@ -55,6 +57,7 @@ public class KnightsTourControlPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				System.out.println("MOVE KNIGHT");
+				knights.makeThoughtfulMove();
 				//TODO find way to move knight in panel
 				
 			}

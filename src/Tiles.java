@@ -18,4 +18,7 @@ public class Tiles{
 	public int getMoves() {
 		return moves;
 	}
+	public void setMoves(int amt) {
+		moves = amt;
+	}
 }
