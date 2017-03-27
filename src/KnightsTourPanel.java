@@ -119,9 +119,9 @@ public class KnightsTourPanel extends JPanel {
 							b.setIcon(icon);
 							firstClick = false;
 							tiles[currentRow][currentCol].visited = true;
+							System.out.println("Tile at " + loc.x + "x and " + loc.y + "y is " + tiles[currentRow][currentCol].visited);
 							updatePossibles();
 						}
-
 					}
 					@Override
 					public void mouseReleased(MouseEvent e) {}
@@ -189,16 +189,14 @@ public class KnightsTourPanel extends JPanel {
 	 */
 	public boolean makeThoughtfulMove() {
 		updatePossibles();
-		System.out.println(loc);
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
 			done = true;
 			return false;
 		}
 		Tiles best = possibleMoves[0];
+		if(possibleMoves.length > 1) {
 		for(Tiles tile: possibleMoves) {
-			System.out.println(tile.getMoves());
-			System.out.println(best.getMoves());
 			if(tile.getMoves() > best.getMoves()) {
 				best = tile;
 			}
@@ -213,6 +211,7 @@ public class KnightsTourPanel extends JPanel {
 
 			}
 		}
+		}
 		moveTo(best);
 		return true;
 	}
@@ -222,7 +221,6 @@ public class KnightsTourPanel extends JPanel {
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
 		best.visited = true;
 		loc = best.getRC();
-		System.out.println(loc);
 	}
 	public boolean isDone() {
 		return done;
@@ -266,7 +264,7 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles RD(Vector loc) {
 		if(loc.x < tiles.length - 2) {
-			if(loc.y < tiles.length - 2) {
+			if(loc.y < tiles.length - 1) {
 				return tiles[loc.x + 2][loc.y + 1];
 			}
 		}
@@ -274,7 +272,7 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles LD(Vector loc) {
 		if(loc.x > 1) {
-			if(loc.y < tiles.length - 2) {
+			if(loc.y < tiles.length - 1) {
 				return tiles[loc.x - 2][loc.y + 1];
 			}
 		}
@@ -290,7 +288,7 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles DR(Vector loc) {
 		if(loc.x < tiles.length - 1) {
-			if(loc.y < tiles.length - 3) {
+			if(loc.y < tiles.length - 2) {
 				return tiles[loc.x + 1][loc.y + 2];
 			}
 		}

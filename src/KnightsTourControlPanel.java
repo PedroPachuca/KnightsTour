@@ -33,7 +33,7 @@ public class KnightsTourControlPanel extends JPanel {
 	private void setUpButtonsAndSliders() {
 		FlowLayout experimentLayout = new FlowLayout();
 		this.setLayout(experimentLayout);
-		JButton moveButton = new JButton("Move");
+		JButton moveButton = new JButton("Thoughtful Move");
 		moveButton.addMouseListener(new MouseListener() {
 
 			@Override
@@ -56,7 +56,6 @@ public class KnightsTourControlPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				System.out.println("MOVE KNIGHT");
 				knights.makeThoughtfulMove();
 				//TODO find way to move knight in panel
 				
@@ -92,7 +91,6 @@ public class KnightsTourControlPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				System.out.println("RUN KNIGHT");
 				while(knights.isDone() != true) {
 					knights.makeThoughtfulMove();
 				}
@@ -107,6 +105,42 @@ public class KnightsTourControlPanel extends JPanel {
 			}
 			
 		});;
+		JButton randomButton = new JButton("Random Move");
+		randomButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+					knights.makeRandomMove();
+				//TODO find way to continually move knight in panel
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		this.add(randomButton);
 		this.add(moveButton);
 		this.add(runButton);
 		
