@@ -93,6 +93,9 @@ public class KnightsTourControlPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				System.out.println("RUN KNIGHT");
+				while(knights.isDone() != true) {
+					knights.makeThoughtfulMove();
+				}
 				//TODO find way to continually move knight in panel
 				
 			}

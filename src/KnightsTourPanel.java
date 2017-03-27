@@ -30,15 +30,16 @@ public class KnightsTourPanel extends JPanel {
 
 	// what private data is needed?
 	private boolean firstClick = true;
-	private Image knight;
+	private Image knight, x;
 	private Vector start;
 	private Vector loc;
 	private Tiles[][] tiles;
 	private JButton[][] chessBoardSquares = new JButton[8][8];
 	private static final String COLS = "ABCDEFGH";
-	private ImageIcon icon;
-	
-	
+	private ImageIcon icon, visited;
+	private boolean done = false;
+
+
 
 	public KnightsTourPanel(int w, int h) {
 		this.setLayout(new GridLayout(0, 9));
@@ -46,20 +47,35 @@ public class KnightsTourPanel extends JPanel {
 		this.setBackground(Color.green);
 		tiles = new Tiles[8][8];
 		setKnight();
+		setVisited();
 		populateTiles();
 		makeBoard();
-		makeIcon();
+		makeIcons();
 	}
-	private void makeIcon() {
+	private void makeIcons() {
 		icon = new ImageIcon();
 		icon.setImage(getKnight());
+		visited = new ImageIcon();
+		visited.setImage(getVisitedImg());
+	}
+	private void setVisited() {
+		try {
+			URL url = getClass().getResource("visited.png");
+			Image image = ImageIO.read(url);
+			x = image;
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	private Image getVisitedImg() {
+		return x;
 	}
 	private void populateTiles() {
 		for(int x = 0; x < tiles.length; x++) {
 			for(int y = 0; y < tiles[x].length; y++) {
 				tiles[x][y] = new Tiles(x, y);
 			}
-		
+
 		}
 	}
 	private void setKnight() {
@@ -70,7 +86,7 @@ public class KnightsTourPanel extends JPanel {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 	private Image getKnight() {
 		return knight;
@@ -78,16 +94,16 @@ public class KnightsTourPanel extends JPanel {
 	public void makeBoard() {
 		this.setBorder(new LineBorder(Color.black));
 		for (int ii = 0; ii < chessBoardSquares.length; ii++) {
-            for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
-            	int currentRow = ii;
-            	int currentCol = jj;
-                JButton b = new JButton();
-                if ((jj % 2 == 1 && ii % 2 == 1)|| (jj % 2 == 0 && ii % 2 == 0)) {
-                    b.setBackground(Color.WHITE);
-                } else {
-                    b.setBackground(Color.BLACK);
-                }
-                b.addMouseListener(new MouseListener() {
+			for (int jj = 0; jj < chessBoardSquares[ii].length; jj++) {
+				int currentRow = ii;
+				int currentCol = jj;
+				JButton b = new JButton();
+				if ((jj % 2 == 1 && ii % 2 == 1)|| (jj % 2 == 0 && ii % 2 == 0)) {
+					b.setBackground(Color.WHITE);
+				} else {
+					b.setBackground(Color.BLACK);
+				}
+				b.addMouseListener(new MouseListener() {
 					@Override
 					public void mouseClicked(MouseEvent e) {}
 					@Override
@@ -97,23 +113,24 @@ public class KnightsTourPanel extends JPanel {
 					@Override
 					public void mousePressed(MouseEvent e) {
 						if(firstClick) {
-						start = new Vector(currentCol, currentRow);
-						loc = start;
-						System.out.println(loc.x + " , "+ loc.y);
-						b.setIcon(icon);
-						firstClick = false;
-						updatePossibles();
+							start = new Vector(currentCol, currentRow);
+							loc = start;
+							System.out.println(loc.x + " , "+ loc.y);
+							b.setIcon(icon);
+							firstClick = false;
+							tiles[currentRow][currentCol].visited = true;
+							updatePossibles();
 						}
-					
+
 					}
 					@Override
 					public void mouseReleased(MouseEvent e) {}
-                	
-                	});
-                chessBoardSquares[jj][ii] = b;
-            }
-        }
-		
+
+				});
+				chessBoardSquares[jj][ii] = b;
+			}
+		}
+
 		fillBoard();
 	}
 	private void updatePossibles() {
@@ -124,24 +141,24 @@ public class KnightsTourPanel extends JPanel {
 		}
 	}
 	private void fillBoard() {
-		 this.add(new JLabel(""));
-	        for (int ii = 0; ii < 8; ii++) {
-	            this.add(
-	                    new JLabel(COLS.substring(ii, ii + 1),
-	                    SwingConstants.CENTER));
-	        }
-	        for (int ii = 0; ii < 8; ii++) {
-	            for (int jj = 0; jj < 8; jj++) {
-	                switch (jj) {
-	                    case 0:
-	                        this.add(new JLabel("" + (ii + 1),
-	                                SwingConstants.CENTER));
-	                    default:
-	                       this.add(chessBoardSquares[jj][ii]);
-	                }
-	            }
-	        }
-		
+		this.add(new JLabel(""));
+		for (int ii = 0; ii < 8; ii++) {
+			this.add(
+					new JLabel(COLS.substring(ii, ii + 1),
+							SwingConstants.CENTER));
+		}
+		for (int ii = 0; ii < 8; ii++) {
+			for (int jj = 0; jj < 8; jj++) {
+				switch (jj) {
+				case 0:
+					this.add(new JLabel("" + (ii + 1),
+							SwingConstants.CENTER));
+				default:
+					this.add(chessBoardSquares[jj][ii]);
+				}
+			}
+		}
+
 	}
 
 
@@ -175,56 +192,69 @@ public class KnightsTourPanel extends JPanel {
 		System.out.println(loc);
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
+			done = true;
 			return false;
 		}
-		Tiles best = null;
+		Tiles best = possibleMoves[0];
 		for(Tiles tile: possibleMoves) {
+			System.out.println(tile.getMoves());
+			System.out.println(best.getMoves());
 			if(tile.getMoves() > best.getMoves()) {
 				best = tile;
+			}
+			else if(tile.getMoves() == best.getMoves()) {
+				int xAway = Math.abs((tile.getRC().x - tiles.length / 2));
+				int yAway = Math.abs((tile.getRC().y - tiles.length / 2));
+				int bxAway = Math.abs((best.getRC().x - tiles.length / 2));
+				int byAway = Math.abs((tile.getRC().y - tiles.length /2 ));		
+				if(Math.sqrt((xAway * xAway) + (yAway * yAway)) < Math.sqrt((bxAway * bxAway) + (byAway * byAway))) {
+					best = tile;
+				}
+
 			}
 		}
 		moveTo(best);
 		return true;
 	}
 	private void moveTo(Tiles best) {
-		
-		chessBoardSquares[loc.x][loc.y].setIcon(null);
+
+		chessBoardSquares[loc.x][loc.y].setIcon(visited);
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
 		best.visited = true;
 		loc = best.getRC();
 		System.out.println(loc);
 	}
+	public boolean isDone() {
+		return done;
+	}
 	private Tiles[] findPossibleMoves(Vector loc) {
 		ArrayList<Tiles> possibles = new ArrayList<Tiles>();
-		if(UL(loc) != null) {
+		if(UL(loc) != null && UL(loc).visited == false) {		
 			possibles.add(UL(loc));
 		}
-		if(UR(loc) != null){
+		if(UR(loc) != null && UR(loc).visited == false){
 			possibles.add(UR(loc));
 		}
-		if(DL(loc) != null) {
+		if(DL(loc) != null && DL(loc).visited == false) {
 			possibles.add(DL(loc));
 		}
-		if(DR(loc) != null) {
+		if(DR(loc) != null && DR(loc).visited == false) {
 			possibles.add(DR(loc));
 		}
-		if(LU(loc) != null) {
+		if(LU(loc) != null && LU(loc).visited == false) {
 			possibles.add(LU(loc));
 		}
-		if(LD(loc) != null) {
+		if(LD(loc) != null && LD(loc).visited == false) {
 			possibles.add(LD(loc));
 		}
-		if(RD(loc) != null) {
+		if(RD(loc) != null && RD(loc).visited == false) {
 			possibles.add(RD(loc));
 		}
-		if(RU(loc) != null) {
+		if(RU(loc) != null && RU(loc).visited == false) {
 			possibles.add(RU(loc));
 		}
-		if(!possibles.isEmpty()) {
-			Tiles[] arr = new Tiles[possibles.size()];
-			return possibles.toArray(arr);
-		}
-		return null;
+		Tiles[] arr = new Tiles[possibles.size()];
+		return possibles.toArray(arr);
 	}
 	private Tiles RU(Vector loc) {
 		if(loc.x < tiles.length - 2) {
@@ -243,9 +273,9 @@ public class KnightsTourPanel extends JPanel {
 		return null;
 	}
 	private Tiles LD(Vector loc) {
-		if(loc.x > 2) {
+		if(loc.x > 1) {
 			if(loc.y < tiles.length - 2) {
-				return tiles[loc.x - 2][loc.x + 1];
+				return tiles[loc.x - 2][loc.y + 1];
 			}
 		}
 		return null;
@@ -260,7 +290,7 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles DR(Vector loc) {
 		if(loc.x < tiles.length - 1) {
-			if(loc.y > tiles.length - 3) {
+			if(loc.y < tiles.length - 3) {
 				return tiles[loc.x + 1][loc.y + 2];
 			}
 		}
@@ -268,7 +298,7 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles DL(Vector loc) {
 		if(loc.x > 0) {
-			if(loc.y > tiles.length - 3) {
+			if(loc.y < tiles.length - 3) {
 				return tiles[loc.x -1][loc.y + 2];
 			}
 		}
@@ -290,6 +320,6 @@ public class KnightsTourPanel extends JPanel {
 		}
 		return null;
 	}
-	
-	
+
+
 }
