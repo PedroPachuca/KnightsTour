@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,6 +19,7 @@ public class KnightsTourControlPanel extends JPanel {
 	static final int SPEED_MAX = 30;
 	static final int SPEED_INIT = 15;  
 	KnightsTourPanel knights;
+	private double speed = 0;
 	public KnightsTourControlPanel(int w, int h, KnightsTourPanel cur) {
 		this.setPreferredSize(new Dimension(w, h));
 		this.setBackground(Color.orange);
@@ -57,8 +59,6 @@ public class KnightsTourControlPanel extends JPanel {
 			@Override
 			public void mousePressed(MouseEvent arg0) {
 				knights.makeThoughtfulMove();
-				//TODO find way to move knight in panel
-				
 			}
 
 			@Override
@@ -91,10 +91,9 @@ public class KnightsTourControlPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				while(knights.isDone() != true) {
-					knights.makeThoughtfulMove();
+				while(knights.isDone() != true && knights.makeThoughtfulMove() != false) {
+						knights.makeThoughtfulMove();
 				}
-				//TODO find way to continually move knight in panel
 				
 			}
 
@@ -140,6 +139,41 @@ public class KnightsTourControlPanel extends JPanel {
 			}
 			
 		});
+		JButton clearButton = new JButton("Revert");
+		clearButton.addMouseListener(new MouseListener() {
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+					knights.clear();
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+		this.add(clearButton);
 		this.add(randomButton);
 		this.add(moveButton);
 		this.add(runButton);
@@ -150,6 +184,7 @@ public class KnightsTourControlPanel extends JPanel {
 			@Override
 			public void stateChanged(ChangeEvent arg0) {
 				System.out.println("CHANGE SPEED to " + speedSlider.getValue());
+				speed = speedSlider.getValue();
 				//TODO change speed to slider val
 			}
 			

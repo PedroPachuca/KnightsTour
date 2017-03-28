@@ -115,11 +115,9 @@ public class KnightsTourPanel extends JPanel {
 						if(firstClick) {
 							start = new Vector(currentCol, currentRow);
 							loc = start;
-							System.out.println(loc.x + " , "+ loc.y);
 							b.setIcon(icon);
 							firstClick = false;
 							tiles[currentRow][currentCol].visited = true;
-							System.out.println("Tile at " + loc.x + "x and " + loc.y + "y is " + tiles[currentRow][currentCol].visited);
 							updatePossibles();
 						}
 					}
@@ -165,7 +163,6 @@ public class KnightsTourPanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		// stuff to draw the board and knight
-
 	}
 	/* make random move just selects a new location at random
 	 * if the knight is trapped (no new locations to move to)
@@ -173,6 +170,7 @@ public class KnightsTourPanel extends JPanel {
 	 * The knight's location should be updated and the 
 	 */
 	public boolean makeRandomMove() {
+		if(loc != null) {
 		updatePossibles();
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
@@ -181,6 +179,8 @@ public class KnightsTourPanel extends JPanel {
 		int index = (int) (Math.random() * possibleMoves.length);
 		moveTo(possibleMoves[index]);
 		return true;
+		}
+		return false;
 	}
 	/* make a move to a new location that ensures the best chance
 	 * for a complete traversal of the board.
@@ -188,6 +188,7 @@ public class KnightsTourPanel extends JPanel {
 	 * then false is returned.  Otherwise, true is returned.
 	 */
 	public boolean makeThoughtfulMove() {
+		if(loc != null) {
 		updatePossibles();
 		Tiles[] possibleMoves = findPossibleMoves(loc);
 		if(possibleMoves.length == 0) {
@@ -197,7 +198,7 @@ public class KnightsTourPanel extends JPanel {
 		Tiles best = possibleMoves[0];
 		if(possibleMoves.length > 1) {
 		for(Tiles tile: possibleMoves) {
-			if(tile.getMoves() > best.getMoves()) {
+			if(tile.getMoves() < best.getMoves()) {
 				best = tile;
 			}
 			else if(tile.getMoves() == best.getMoves()) {
@@ -214,6 +215,24 @@ public class KnightsTourPanel extends JPanel {
 		}
 		moveTo(best);
 		return true;
+		}
+		return false;
+	}
+	public void clear() {
+		for(Tiles[] arr: tiles) {
+			for(Tiles cur : arr) {
+				cur.clearAll();
+			}
+		}
+		for(JButton[] arr: chessBoardSquares) {
+			for(JButton curr: arr) {
+				curr.setIcon(null);
+			}
+		}
+			firstClick = true;
+			chessBoardSquares[loc.x][loc.y].setIcon(null);
+			done = false;
+			loc = null;
 	}
 	private void moveTo(Tiles best) {
 

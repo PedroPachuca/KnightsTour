@@ -21,4 +21,8 @@ public class Tiles{
 	public void setMoves(int amt) {
 		moves = amt;
 	}
+	public void clearAll() {
+		visited = false;
+		moves = 0;
+	}
 }
