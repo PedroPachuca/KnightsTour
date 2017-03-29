@@ -52,6 +52,9 @@ public class KnightsTourPanel extends JPanel {
 		makeBoard();
 		makeIcons();
 	}
+	public Vector getLoc() {
+		return loc;
+	}
 	private void makeIcons() {
 		icon = new ImageIcon();
 		icon.setImage(getKnight());
@@ -117,7 +120,7 @@ public class KnightsTourPanel extends JPanel {
 							loc = start;
 							b.setIcon(icon);
 							firstClick = false;
-							tiles[currentRow][currentCol].visited = true;
+							tiles[currentCol][currentRow].visited = true;
 							updatePossibles();
 						}
 					}
@@ -162,7 +165,6 @@ public class KnightsTourPanel extends JPanel {
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		// stuff to draw the board and knight
 	}
 	/* make random move just selects a new location at random
 	 * if the knight is trapped (no new locations to move to)
@@ -238,6 +240,7 @@ public class KnightsTourPanel extends JPanel {
 
 		chessBoardSquares[loc.x][loc.y].setIcon(visited);
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
+		
 		best.visited = true;
 		loc = best.getRC();
 	}

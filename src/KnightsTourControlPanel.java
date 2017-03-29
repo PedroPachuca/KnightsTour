@@ -91,7 +91,7 @@ public class KnightsTourControlPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent arg0) {
-				while(knights.isDone() != true && knights.makeThoughtfulMove() != false) {
+				while(knights.isDone() != true && knights.getLoc() != null) {
 						knights.makeThoughtfulMove();
 				}
 				
