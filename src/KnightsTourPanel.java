@@ -137,7 +137,7 @@ public class KnightsTourPanel extends JPanel {
 	private void updatePossibles() {
 		for(int r = 0; r < chessBoardSquares.length; r++) {
 			for(int c = 0; c < chessBoardSquares[r].length; c++) {
-				tiles[r][c].setMoves((findPossibleMoves(tiles[r][c].getRC()).length));
+				tiles[r][c].setAllMoves((findPossibleMoves(tiles[r][c].getRC())));
 			}
 		}
 	}
@@ -173,14 +173,14 @@ public class KnightsTourPanel extends JPanel {
 	 */
 	public boolean makeRandomMove() {
 		if(loc != null) {
-		updatePossibles();
-		Tiles[] possibleMoves = findPossibleMoves(loc);
-		if(possibleMoves.length == 0) {
-			return false;
-		}
-		int index = (int) (Math.random() * possibleMoves.length);
-		moveTo(possibleMoves[index]);
-		return true;
+			updatePossibles();
+			Tiles[] possibleMoves = findPossibleMoves(loc);
+			if(possibleMoves.length == 0) {
+				return false;
+			}
+			int index = (int) (Math.random() * possibleMoves.length);
+			moveTo(possibleMoves[index]);
+			return true;
 		}
 		return false;
 	}
@@ -191,32 +191,23 @@ public class KnightsTourPanel extends JPanel {
 	 */
 	public boolean makeThoughtfulMove() {
 		if(loc != null) {
-		updatePossibles();
-		Tiles[] possibleMoves = findPossibleMoves(loc);
-		if(possibleMoves.length == 0) {
-			done = true;
-			return false;
-		}
-		Tiles best = possibleMoves[0];
-		if(possibleMoves.length > 1) {
-		for(Tiles tile: possibleMoves) {
-			if(tile.getMoves() < best.getMoves()) {
-				best = tile;
+			updatePossibles();
+			Tiles[] possibleMoves = findPossibleMoves(loc);
+			if(possibleMoves.length == 0) {
+				done = true;
+				return false;
 			}
-			else if(tile.getMoves() == best.getMoves()) {
-				int xAway = Math.abs((tile.getRC().x - tiles.length / 2));
-				int yAway = Math.abs((tile.getRC().y - tiles.length / 2));
-				int bxAway = Math.abs((best.getRC().x - tiles.length / 2));
-				int byAway = Math.abs((tile.getRC().y - tiles.length /2 ));		
-				if(Math.sqrt((xAway * xAway) + (yAway * yAway)) < Math.sqrt((bxAway * bxAway) + (byAway * byAway))) {
-					best = tile;
+			Tiles best = possibleMoves[0];
+			if(possibleMoves.length > 1) {
+				for(Tiles tile: possibleMoves) {
+				
+					if(tile.getMoves() < best.getMoves()) {
+						best = tile;
+					}
 				}
-
 			}
-		}
-		}
-		moveTo(best);
-		return true;
+			moveTo(best);
+			return true;
 		}
 		return false;
 	}
@@ -231,18 +222,18 @@ public class KnightsTourPanel extends JPanel {
 				curr.setIcon(null);
 			}
 		}
-			firstClick = true;
-			chessBoardSquares[loc.x][loc.y].setIcon(null);
-			done = false;
-			loc = null;
+		firstClick = true;
+		chessBoardSquares[loc.x][loc.y].setIcon(null);
+		done = false;
+		loc = null;
 	}
 	private void moveTo(Tiles best) {
 
-		chessBoardSquares[loc.x][loc.y].setIcon(visited);
 		chessBoardSquares[best.getRC().x][best.getRC().y].setIcon(icon);
-		
+		chessBoardSquares[loc.x][loc.y].setIcon(visited);
 		best.visited = true;
 		loc = best.getRC();
+		updatePossibles();
 	}
 	public boolean isDone() {
 		return done;
@@ -301,7 +292,7 @@ public class KnightsTourPanel extends JPanel {
 		return null;
 	}
 	private Tiles LU(Vector loc) {
-		if(loc.x > 2) {
+		if(loc.x > 1) {
 			if(loc.y > 0) {
 				return tiles[loc.x - 2][loc.y - 1];
 			}
@@ -318,8 +309,8 @@ public class KnightsTourPanel extends JPanel {
 	}
 	private Tiles DL(Vector loc) {
 		if(loc.x > 0) {
-			if(loc.y < tiles.length - 3) {
-				return tiles[loc.x -1][loc.y + 2];
+			if(loc.y < tiles.length - 2) {
+				return tiles[loc.x - 1][loc.y + 2];
 			}
 		}
 		return null;

@@ -2,6 +2,7 @@
 
 public class Tiles{
 	private int row, col, moves;
+	public Tiles[] allMoves;
 	boolean visited;
 	Tiles(int r, int c) {
 		row = r;
@@ -16,10 +17,16 @@ public class Tiles{
 		return new Vector(row, col);
 	}
 	public int getMoves() {
-		return moves;
+		return allMoves.length;
 	}
 	public void setMoves(int amt) {
 		moves = amt;
+	}
+	public void setAllMoves(Tiles[] all) {
+		allMoves = all;
+	}
+	public Tiles[] getAllMoves() {
+		return allMoves;
 	}
 	public void clearAll() {
 		visited = false;
